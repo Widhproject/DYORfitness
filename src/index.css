@@ -1,0 +1,7 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+body{@apply bg-ink text-zinc-100 antialiased font-sans}
+.card{@apply bg-card border border-white/5 rounded-2xl p-4}
+.btn{@apply bg-lime text-black font-bold rounded-xl px-4 py-2 hover:brightness-110 transition disabled:opacity-50}
+.btn2{@apply border border-white/10 rounded-xl px-3 py-2 hover:bg-white/5 transition}
+.input{@apply w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 outline-none focus:border-lime}
+.fade{animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
