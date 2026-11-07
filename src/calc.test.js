@@ -15,3 +15,5 @@ test('muscleAgg: warm-up tidak dihitung, sekunder terpisah',()=>{
  const a=muscleAgg([{date:'2026-01-05',w:50,r:10,type:'working',p:'chest',sec:['triceps']},{date:'2026-01-05',w:20,r:15,type:'warmup',p:'chest',sec:['triceps']},{date:'2026-01-06',w:40,r:10,type:'drop',p:'chest',sec:[]}])
  assert.equal(a.chest.sets,2);assert.equal(a.chest.vol,900);assert.equal(a.chest.dates.size,2);assert.equal(a.triceps.sets,0);assert.equal(a.triceps.ind,1)})
 test('weekStart = Senin',()=>{assert.equal(weekStart('2026-01-01'),'2025-12-29');assert.equal(weekStart('2026-01-05'),'2026-01-05')})
+import {MG,MGMAP} from './calc.js'
+test('Abs terdaftar sebagai kelompok otot',()=>{assert.ok(MG.includes('abs'));assert.equal(MGMAP.Abs,'abs')})

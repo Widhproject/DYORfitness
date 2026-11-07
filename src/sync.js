@@ -5,7 +5,8 @@ let UID='';export const setUid=u=>{UID=u||''}
 const open=()=>new Promise((res,rej)=>{const r=indexedDB.open('dyorfitness',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})
 const tx=async(mode,f)=>{const d=await open();return new Promise((res,rej)=>{const t=d.transaction('kv',mode),q=f(t.objectStore('kv'));t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)})}
 export const kvGet=k=>tx('readonly',s=>s.get(k)).catch(()=>undefined)
-export const kvSet=(k,v)=>tx('readwrite',s=>s.put(v,k))
+export const getUid=()=>UID
+export const kvSet=async(k,v)=>{const r=await tx('readwrite',s=>s.put(v,k));if(String(k).includes(':food:'))dispatchEvent(new Event('dyor-food'));return r}
 const kvKeys=()=>tx('readonly',s=>s.getAllKeys()).catch(()=>[])
 let st={state:navigator.onLine?'online':'offline',pending:0,msg:''};const subs=new Set()
 const set=p=>{st={...st,...p};subs.forEach(f=>f(st))}

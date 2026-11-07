@@ -10,7 +10,7 @@ export function HeroArt({cat='CUSTOM',className='w-full h-full'}){
   NUTRI:<><circle cx="300" cy="80" r="52" fill="none" stroke={c} strokeWidth="9"/><circle cx="300" cy="80" r="30" opacity=".35"/><path d="M200 36V124M188 36V72M212 36V72" stroke={c} strokeWidth="7" fill="none" strokeLinecap="round"/></>}
  return <svg viewBox="0 0 400 160" preserveAspectRatio="xMaxYMid slice" className={className} aria-hidden="true"><defs><linearGradient id={id} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={c} stopOpacity=".38"/><stop offset="1" stopColor="#141816"/></linearGradient></defs>
   <rect width="400" height="160" fill={`url(#${id})`}/><g fill={c} opacity=".92">{M[cat]||M.CUSTOM}</g></svg>}
-const FR={chest:[[41,48,10,8],[59,48,10,8]],shoulders:[[28,40,7,7],[72,40,7,7]],biceps:[[22,56,5,11],[78,56,5,11]],quadriceps:[[40,125,9.5,23],[60,125,9.5,23]],calves:[[39,178,6,18],[61,178,6,18]]}
+const FR={abs:[[50,72,8,13]],chest:[[41,48,10,8],[59,48,10,8]],shoulders:[[28,40,7,7],[72,40,7,7]],biceps:[[22,56,5,11],[78,56,5,11]],quadriceps:[[40,125,9.5,23],[60,125,9.5,23]],calves:[[39,178,6,18],[61,178,6,18]]}
 const BK={back:[[50,37,12,6],[38,62,8,16],[62,62,8,16]],shoulders:[[28,40,7,7],[72,40,7,7]],triceps:[[22,56,5,11],[78,56,5,11]],glutes:[[42,108,9,8],[58,108,9,8]],hamstrings:[[40,134,9.5,19],[60,134,9.5,19]],calves:[[39,178,6,18],[61,178,6,18]]}
 const SIL=[[50,16,10,10],[22,52,7,18],[19,88,5.5,16],[78,52,7,18],[81,88,5.5,16],[40,128,11,26],[39,178,7.5,22],[60,128,11,26],[61,178,7.5,22]]
 // lv: {otot: 0..1} = intensitas sorotan. Dipakai untuk exercise (primer 1, sekunder .4) dan peta otot (porsi working sets)

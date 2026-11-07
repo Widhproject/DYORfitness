@@ -14,7 +14,7 @@ export default function ProteinSetup(){
   const target=gpk!=='custom'&&!auto&&cur?cur:calc;if(!(target>0))return setMsg('Target protein tidak valid.')
   const a=await supabase.from('profiles').upsert({id:user.id,weight_kg:w,height_cm:+f.height_cm||null,age:+f.age||null,goal:f.goal})
   const c=await supabase.from('protein_targets').upsert({user_id:user.id,g_per_kg:gpk==='custom'?null:gpk,target_g:target,updated_at:new Date().toISOString()})
-  setMsg(a.error||c.error?(a.error||c.error).message:`Tersimpan. Target protein: ${target} g/hari`);if(!c.error)setCur(target)}
+  dispatchEvent(new Event('dyor-food'));setMsg(a.error||c.error?(a.error||c.error).message:`Tersimpan. Target protein: ${target} g/hari`);if(!c.error)setCur(target)}
  const inp=(k,ph)=><input className="input" type="number" step="any" placeholder={ph} value={f[k]} onChange={e=>setF({...f,[k]:e.target.value})}/>
  return <div className="card space-y-3"><b>Target protein</b><div className="grid grid-cols-3 gap-2">{inp('weight_kg','Berat (kg)')}{inp('height_cm','Tinggi (cm)')}{inp('age','Usia')}</div>
   <select className="input" value={f.goal} onChange={e=>setF({...f,goal:e.target.value})}>{[['bulking','Bulking'],['cutting','Cutting'],['maintenance','Maintenance'],['general','General Fitness']].map(([k,l])=><option key={k} value={k}>{l}</option>)}</select>

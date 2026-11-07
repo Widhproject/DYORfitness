@@ -5,6 +5,7 @@ import {BarChart,Bar,XAxis,YAxis,Tooltip,ResponsiveContainer} from 'recharts'
 import {supabase} from '../supabase'
 import {useAuth,useData,CATS,catC,vol,num,iso,tip,weekKey} from '../lib'
 import {Ring} from '../ui'
+import {ProteinCard} from '../Protein'
 import {HeroCard,Empty} from '../art'
 const Stat=({l,v})=><div className="card"><div className="text-zinc-400 text-xs">{l}</div><div className="text-2xl font-extrabold mt-1">{v}</div></div>
 export default function Dashboard(){
@@ -27,6 +28,7 @@ export default function Dashboard(){
   <div className="card flex items-center gap-4"><div className="flex-1"><div className="text-sm text-zinc-300">Weekly Progress</div><div className="text-3xl font-extrabold">{done} / {goal}</div><div className="text-xs text-zinc-500 mb-3">Workouts completed{program?` · ${program.name}`:''}</div>
     <div className="flex gap-2">{days.map((d,i)=><div key={d} className="text-center text-[10px] text-zinc-500"><div className={`w-6 h-6 rounded-full grid place-items-center border ${dates.has(d)?'bg-lime border-lime text-black':d===today?'border-lime':'border-white/20'}`}>{dates.has(d)&&<Check size={13}/>}</div>{'MTWTFSS'[i]}</div>)}</div></div>
    <Ring pct={pct}><span className="text-2xl font-extrabold text-lime">{pct}%</span></Ring></div>
+  <ProteinCard/>
   <div><div className="font-bold mb-2">Today's Workout</div><HeroCard cat={ts?.category||pday?.category||'CUSTOM'}>
    {ts?<><div className="text-2xl font-extrabold">{ts.category}{pday?` · ${pday.day_label}`:''}</div><div className="text-sm text-zinc-300">Sesi hari ini sudah dimulai</div><button className="btn" onClick={()=>nav('/workout/'+today)}><Play size={14} className="inline mr-1"/>Continue Workout</button></>
    :pday?<><div className="text-2xl font-extrabold">{pday.day_label}</div><div className="text-sm text-zinc-300">{pday.category} · {pday.workout_program_exercises.length} exercises</div><button className="btn" onClick={()=>nav('/programs')}><Play size={14} className="inline mr-1"/>Start Workout</button></>

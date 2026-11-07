@@ -12,6 +12,7 @@ import Profile from './pages/Profile'
 import Programs from './pages/Programs'
 import Nutrition from './pages/Nutrition'
 import {SyncBadge} from './Offline'
+import {ProteinPill} from './Protein'
 import {setUid} from './sync'
 import {RestProvider,RestWidget} from './rest'
 const nav=()=>[['/dashboard','Dashboard',LayoutDashboard],['/calendar','Calendar',CalendarDays],['/workout/'+iso(new Date()),'Workout',Dumbbell],['/progress','Progress',TrendingUp],['/nutrition','Nutrition',Apple],['/profile','Profile',User]]
@@ -24,7 +25,7 @@ function Layout(){
    {items.map(([to,l,I])=><NavLink key={l} to={to} className={cls}><I size={18}/>{l}</NavLink>)}</aside>
   <main className="md:ml-56 p-4 md:p-8 pb-24 md:pb-8 fade"><Outlet/></main>
   <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-white/5 flex justify-around py-2">
-   {items.map(([to,l,I])=><NavLink key={l} to={to} className={({isActive})=>`flex flex-col items-center text-[10px] gap-1 ${isActive?'text-lime':'text-zinc-500'}`}><I size={20}/>{l}</NavLink>)}</nav><RestWidget/><SyncBadge/></div></RestProvider>}
+   {items.map(([to,l,I])=><NavLink key={l} to={to} className={({isActive})=>`flex flex-col items-center text-[10px] gap-1 ${isActive?'text-lime':'text-zinc-500'}`}><I size={20}/>{l}</NavLink>)}</nav><RestWidget/><ProteinPill/><SyncBadge/></div></RestProvider>}
 export default function App(){
  const [session,setSession]=useState(undefined),[recovery,setRecovery]=useState(false)
  useEffect(()=>{supabase.auth.getSession().then(({data})=>setSession(data.session))

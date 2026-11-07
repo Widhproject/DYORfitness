@@ -4,7 +4,7 @@ import {Empty,MuscleFigure} from '../art'
 import {supabase} from '../supabase'
 import {iso,tip,num} from '../lib'
 import {MG,muscleAgg,weekStart} from '../calc'
-export const COL={chest:'#c6f000',back:'#38bdf8',shoulders:'#fb923c',biceps:'#a78bfa',triceps:'#f472b6',quadriceps:'#34d399',hamstrings:'#fbbf24',glutes:'#f87171',calves:'#94a3b8'}
+export const COL={chest:'#c6f000',back:'#38bdf8',shoulders:'#fb923c',biceps:'#a78bfa',triceps:'#f472b6',quadriceps:'#34d399',hamstrings:'#fbbf24',glutes:'#f87171',calves:'#94a3b8',abs:'#2dd4bf'}
 const cap=s=>s[0].toUpperCase()+s.slice(1),RG=[[7,'7 hari'],[30,'30 hari'],[90,'3 bulan'],[180,'6 bulan'],[365,'1 tahun'],[0,'All time']]
 export function useMuscleRows(){const [rows,setRows]=useState(null)
  useEffect(()=>{supabase.from('workout_sets').select('weight,reps,set_type,workout_exercises(exercises(primary_muscle_group,secondary_muscle_groups),workout_sessions(date))').range(0,9999)
