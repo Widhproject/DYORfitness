@@ -2,6 +2,8 @@
 const sk=o=>o&&Object.fromEntries(Object.entries(o).sort(([a],[b])=>a<b?-1:1))
 const clean=r=>r&&Object.fromEntries(Object.entries(r).filter(([k])=>!k.startsWith('_')&&k!=='updated_at'&&k!=='created_at').map(([k,v])=>[k,v??null]))
 export const same=(a,b)=>{if(!a||!b)return !a&&!b;const x=clean(a),y=clean(b);return [...new Set([...Object.keys(x),...Object.keys(y)])].every(k=>JSON.stringify(x[k]??null)===JSON.stringify(y[k]??null))}
+// S (terakhir sinkron) dan L (lokal) HARUS objek terpisah; structuredClone/IndexedDB mempertahankan referensi yang sama, jadi salin keduanya sendiri-sendiri
+export const fork=d=>({...d,S:structuredClone(d.S),L:structuredClone(d.L)})
 export const send=r=>Object.fromEntries(Object.entries(r).filter(([k])=>!k.startsWith('_')&&k!=='updated_at'))
 export function plan(S,L,V,tables){const ups={},dels={},conflicts=[]
  for(const t of tables){ups[t]=[];dels[t]=[]

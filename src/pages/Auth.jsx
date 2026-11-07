@@ -1,6 +1,7 @@
 import {useState} from 'react'
+import {HeroArt} from '../art'
 import {supabase} from '../supabase'
-const Shell=({children})=><div className="min-h-screen grid place-items-center p-4"><div className="card w-full max-w-sm space-y-4 fade"><div><div className="text-3xl font-extrabold text-lime">DYORFitness</div><div className="text-sm text-zinc-400">Your Fitness Assistant</div></div>{children}</div></div>
+const Shell=({children})=><div className="min-h-screen grid place-items-center p-4"><div className="card w-full max-w-sm space-y-4 fade"><div className="h-28 -mx-4 -mt-4 overflow-hidden rounded-t-2xl"><HeroArt cat="PUSH"/></div><div><div className="text-3xl font-extrabold text-lime">DYORFitness</div><div className="text-sm text-zinc-400">Your Fitness Assistant</div></div>{children}</div></div>
 export default function Auth(){
  const [mode,setMode]=useState('login'),[f,setF]=useState({name:'',email:'',password:''}),[msg,setMsg]=useState(''),[busy,setBusy]=useState(false)
  const set=k=>e=>setF({...f,[k]:e.target.value})

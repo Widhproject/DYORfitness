@@ -1,5 +1,6 @@
 import {useEffect,useState} from 'react'
 import {BarChart,Bar,PieChart,Pie,Cell,XAxis,YAxis,Tooltip,ResponsiveContainer,CartesianGrid} from 'recharts'
+import {Empty,MuscleFigure} from '../art'
 import {supabase} from '../supabase'
 import {iso,tip,num} from '../lib'
 import {MG,muscleAgg,weekStart} from '../calc'
@@ -12,7 +13,7 @@ export function useMuscleRows(){const [rows,setRows]=useState(null)
 export default function Muscle(){
  const rows=useMuscleRows(),[rg,setRg]=useState(30),[by,setBy]=useState('week'),[met,setMet]=useState('sets')
  if(!rows)return <p className="text-zinc-400">Memuat…</p>
- const work=rows.filter(r=>r.type!=='warmup'&&r.p);if(!work.length)return <div className="card text-sm text-zinc-400">Belum ada working set dengan kelompok otot. Catat latihan dulu; exercise lama otomatis terklasifikasi setelah migration_002 dijalankan.</div>
+ const work=rows.filter(r=>r.type!=='warmup'&&r.p);if(!work.length)return <Empty cat="LEGS" title="Belum ada data otot" text="Catat minimal satu working set (warm-up tidak dihitung). Pastikan migration_002 sudah dijalankan agar exercise punya kelompok otot."/>
  const today=iso(new Date()),from=rg?iso(new Date(Date.now()-rg*864e5)):'',first=work.reduce((a,r)=>r.date<a?r.date:a,today)
  const weeks=Math.max(1,rg?rg/7:(Date.now()-new Date(first+'T00:00:00'))/6048e5),A=muscleAgg(rows,from),act=MG.filter(m=>A[m].sets>0||A[m].ind>0)
  const grp={};work.filter(r=>r.date>=from).forEach(r=>{const k=by==='week'?weekStart(r.date):r.date.slice(0,7);(grp[k]??={k})[r.p]=(grp[k][r.p]||0)+(met==='sets'?1:r.w*r.r)})
@@ -25,6 +26,7 @@ export default function Muscle(){
  const sel=(v,f,o)=><select className="input w-32" value={v} onChange={e=>f(e.target.value)}>{o.map(([a,b])=><option key={a} value={a}>{b}</option>)}</select>
  return <div className="space-y-4"><div className="flex gap-2 flex-wrap"><select className="input w-32" value={rg} onChange={e=>setRg(+e.target.value)}>{RG.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select>{sel(by,setBy,[['week','Mingguan'],['month','Bulanan']])}{sel(met,setMet,[['sets','Working sets'],['vol','Volume (kg)']])}</div>
   <p className="text-xs text-zinc-500">Hanya working set (warm-up dikecualikan). Set dihitung penuh ke otot primer; otot sekunder dicatat terpisah sebagai indirect sets.</p>
+  <div className="card flex items-center gap-4"><MuscleFigure className="w-52" lv={Object.fromEntries(MG.map(m=>[m,A[m].sets/Math.max(1,...MG.map(k=>A[k].sets))]))}/><p className="text-sm text-zinc-400">Peta otot: makin terang berarti makin banyak working sets (otot primer) pada periode terpilih.</p></div>
   <div className="card overflow-x-auto"><table className="w-full text-sm"><thead className="text-zinc-400 text-left"><tr><th>Otot</th><th>Sets</th><th>Volume kg</th><th>Hari</th><th>Sets/minggu</th><th>Indirect</th></tr></thead><tbody>
    {act.map(m=><tr key={m}><td><i className="inline-block w-2 h-2 rounded-full mr-2" style={{background:COL[m]}}/>{cap(m)}</td><td>{A[m].sets}</td><td>{num(A[m].vol)}</td><td>{A[m].dates.size}</td><td>{(A[m].sets/weeks).toFixed(1)}</td><td>{A[m].ind}</td></tr>)}</tbody></table></div>
   <div className="grid md:grid-cols-2 gap-3"><div className="card h-64"><b className="text-sm">Distribusi working sets</b><ResponsiveContainer><PieChart><Pie data={act.filter(m=>A[m].sets).map(m=>({name:cap(m),value:A[m].sets,m}))} dataKey="value" nameKey="name" outerRadius={80}>{act.filter(m=>A[m].sets).map(m=><Cell key={m} fill={COL[m]}/>)}</Pie><Tooltip {...tip}/></PieChart></ResponsiveContainer></div>

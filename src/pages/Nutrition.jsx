@@ -1,5 +1,6 @@
 import {useCallback,useEffect,useState} from 'react'
 import {BarChart,Bar,XAxis,YAxis,Tooltip,ResponsiveContainer,ReferenceLine,CartesianGrid} from 'recharts'
+import {Empty} from '../art'
 import {Trash2,Pencil} from 'lucide-react'
 import {Link} from 'react-router-dom'
 import {supabase} from '../supabase'
@@ -29,7 +30,7 @@ export default function Nutrition(){
    {res.map(f=><button key={f.id} onClick={()=>{setSel(f);setQ(f.name);setAmt('')}} className="block w-full text-left px-3 py-1 rounded-lg hover:bg-white/5">{f.name} <span className="text-xs text-zinc-500">{ST[f.state]} · {f.unit==='unit'?`${f.protein_per_unit} g/${f.unit_label}`:`${f.protein_per_100g} g/100 g`}</span></button>)}
    {sel&&<div className="flex gap-2 items-center"><input className="input" type="number" min="0" step="any" placeholder={sel.unit==='unit'?`Jumlah (${sel.unit_label})`:'Berat (gram)'} value={amt} onChange={e=>setAmt(e.target.value)}/><span className="text-sm w-24 text-lime">{+amt>0?proteinFor(sel,+amt)+' g':''}</span><button className="btn" onClick={add}>Tambah</button></div>}
    <details><summary className="text-sm text-zinc-400 cursor-pointer">Makanan custom</summary><div className="flex flex-wrap gap-2 mt-2"><input className="input flex-1" placeholder="Nama" value={cf.name} onChange={e=>setCf({...cf,name:e.target.value})}/><select className="input w-32" value={cf.unit} onChange={e=>setCf({...cf,unit:e.target.value})}><option value="g">per 100 g</option><option value="unit">per porsi</option></select><input className="input w-24" type="number" placeholder="Protein g" value={cf.p} onChange={e=>setCf({...cf,p:e.target.value})}/><button className="btn2" onClick={addFood}>Simpan</button></div></details></div>
-  <div className="card space-y-2"><b>Makanan hari ini</b>{!logs.length&&<p className="text-sm text-zinc-500">Belum ada makanan dicatat pada tanggal ini.</p>}
+  <div className="card space-y-2"><b>Makanan hari ini</b>{!logs.length&&<Empty cat="NUTRI" title="Belum ada makanan hari ini" text="Cari makanan di atas untuk mulai mencatat protein."/>}
    {logs.map(l=><div key={l.id} className="flex items-center gap-2 text-sm"><span className="flex-1">{l.food_database.name} <span className="text-zinc-500">{ST[l.food_database.state]} · {l.amount} {l.food_database.unit==='unit'?l.food_database.unit_label:'g'}</span></span><b className="text-lime">{l.protein_g} g</b><button onClick={()=>edit(l)}><Pencil size={14}/></button><button onClick={()=>mut(L=>{delete L.food[l.id]})}><Trash2 size={14}/></button></div>)}</div>
   <div className="card space-y-3"><b>Riwayat 30 hari</b><div className="grid grid-cols-3 gap-2 text-center text-sm"><div><div className="text-xl font-extrabold">{Math.round(avg(logged.slice(-7).map(x=>x.p)))} g</div>rata-rata 7 hari</div><div><div className="text-xl font-extrabold">{Math.round(avg(logged.map(x=>x.p)))} g</div>rata-rata 30 hari</div><div><div className="text-xl font-extrabold">{target?logged.filter(x=>x.p>=target).length:'–'}</div>hari target tercapai</div></div>
    <p className="text-xs text-zinc-500">Rata-rata hanya menghitung hari yang ada catatannya.</p>

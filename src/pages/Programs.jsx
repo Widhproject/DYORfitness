@@ -4,6 +4,7 @@ import {Star,Copy,Trash2,ChevronUp,ChevronDown,Play} from 'lucide-react'
 import {supabase} from '../supabase'
 import {useAuth,iso,catC} from '../lib'
 import {cached} from '../sync'
+import {Empty} from '../art'
 import ExercisePicker from './ExercisePicker'
 const CS=['PUSH','PULL','LEGS','UPPER','LOWER','CUSTOM'],WD=['Sen','Sel','Rab','Kam','Jum','Sab','Min']
 const PRE={'PPL 6 Days':[['Push A','PUSH',0],['Pull A','PULL',1],['Legs A','LEGS',2],['Push B','PUSH',3],['Pull B','PULL',4],['Legs B','LEGS',5]],'PPL 3 Days':[['Push','PUSH',0],['Pull','PULL',2],['Legs','LEGS',4]],
@@ -33,7 +34,7 @@ export default function Programs(){
  if(!ps)return <p className="text-zinc-400">Memuat…</p>
  return <div className="max-w-3xl mx-auto space-y-4"><h1 className="text-2xl font-extrabold">Programs</h1>
   <div className="card flex flex-wrap gap-2"><input className="input flex-1 min-w-40" placeholder="Nama program baru" value={name} onChange={e=>setName(e.target.value)}/><select className="input w-40" value={pre} onChange={e=>setPre(e.target.value)}>{Object.keys(PRE).map(k=><option key={k}>{k}</option>)}</select><button className="btn" onClick={create}>Buat</button></div>
-  {!ps.length&&<div className="card text-zinc-400 text-sm">Belum ada program. Pilih template (mis. PPL 6 Days) lalu klik Buat.</div>}
+  {!ps.length&&<Empty cat="UPPER" title="Belum ada program" text="Pilih template (mis. PPL 6 Days) di atas lalu klik Buat, lalu isi exercise tiap harinya."/>}
   {[...ps].sort((a,b)=>b.favorite-a.favorite).map(p=><div key={p.id} className="card space-y-3">
    <div className="flex items-center gap-2"><button onClick={()=>upd('workout_programs',p.id,{favorite:!p.favorite})}><Star size={18} className={p.favorite?'fill-lime text-lime':'text-zinc-500'}/></button>
     <button className="flex-1 text-left font-bold" onClick={()=>setOpen(open===p.id?null:p.id)}>{p.name}<span className="text-xs text-zinc-500 ml-2">{p.workout_program_days.length} hari</span></button>
