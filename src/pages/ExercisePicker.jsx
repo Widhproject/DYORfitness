@@ -2,15 +2,19 @@ import {useEffect,useState} from 'react'
 import {Star,Pencil,Trash2,X} from 'lucide-react'
 import {supabase} from '../supabase'
 import {useAuth} from '../lib'
+import {MGMAP} from '../calc'
+import {cached} from '../sync'
+const CG={PUSH:['PUSH'],PULL:['PULL'],LEGS:['LEGS'],UPPER:['PUSH','PULL'],LOWER:['LEGS']}
 export default function ExercisePicker({cat,onPick,onClose}){
  const {user}=useAuth(),[list,setList]=useState([]),[favs,setFavs]=useState(new Set()),[q,setQ]=useState(''),[nm,setNm]=useState(''),[grp,setGrp]=useState('')
- const load=async()=>{const [a,b]=await Promise.all([supabase.from('exercises').select('*').eq('category',cat).order('name'),supabase.from('exercise_favorites').select('exercise_id')]);setList(a.data||[]);setFavs(new Set((b.data||[]).map(x=>x.exercise_id)))}
+ const load=async()=>{const [a,b]=await Promise.all([cached('ex:'+cat,()=>supabase.from('exercises').select('*').in('category',CG[cat]||['PUSH','PULL','LEGS']).order('name')),cached('favs',()=>supabase.from('exercise_favorites').select('exercise_id'))]);setList(a);setFavs(new Set(b.map(x=>x.exercise_id)))}
+ const on=()=>navigator.onLine||(alert('Fitur ini butuh koneksi internet'),false)
  useEffect(()=>{load()},[cat])
  const groups=[...new Set(list.map(e=>e.muscle_group))]
- const fav=async e=>{favs.has(e.id)?await supabase.from('exercise_favorites').delete().eq('exercise_id',e.id):await supabase.from('exercise_favorites').insert({user_id:user.id,exercise_id:e.id});load()}
- const add=async()=>{if(!nm.trim())return;const {error}=await supabase.from('exercises').insert({user_id:user.id,name:nm.trim(),category:cat,muscle_group:grp||groups[0]});if(error)alert(error.message);setNm('');load()}
- const ren=async e=>{const n=prompt('Nama exercise',e.name);if(n?.trim()){await supabase.from('exercises').update({name:n.trim()}).eq('id',e.id);load()}}
- const del=async e=>{if(confirm(`Hapus "${e.name}"? Riwayat latihan exercise ini ikut terhapus.`)){await supabase.from('exercises').delete().eq('id',e.id);load()}}
+ const fav=async e=>{if(!on())return;favs.has(e.id)?await supabase.from('exercise_favorites').delete().eq('exercise_id',e.id):await supabase.from('exercise_favorites').insert({user_id:user.id,exercise_id:e.id});load()}
+ const add=async()=>{if(!on())return;if(!nm.trim())return;const {error}=await supabase.from('exercises').insert({user_id:user.id,name:nm.trim(),category:list.find(e=>e.muscle_group===(grp||groups[0]))?.category||'PUSH',muscle_group:grp||groups[0],primary_muscle_group:MGMAP[grp||groups[0]]||null});if(error)alert(error.message);setNm('');load()}
+ const ren=async e=>{if(!on())return;const n=prompt('Nama exercise',e.name);if(n?.trim()){await supabase.from('exercises').update({name:n.trim()}).eq('id',e.id);load()}}
+ const del=async e=>{if(!on())return;if(confirm(`Hapus "${e.name}"? Riwayat latihan exercise ini ikut terhapus.`)){await supabase.from('exercises').delete().eq('id',e.id);load()}}
  const vis=list.filter(e=>e.name.toLowerCase().includes(q.toLowerCase()))
  const Row=e=><div key={e.id} className="flex items-center gap-2 py-1"><button className="flex-1 text-left hover:text-lime" onClick={()=>onPick(e)}>{e.name}{e.user_id&&<span className="text-xs text-zinc-500"> custom</span>}</button>
   {e.user_id&&<><button onClick={()=>ren(e)}><Pencil size={14}/></button><button onClick={()=>del(e)}><Trash2 size={14}/></button></>}

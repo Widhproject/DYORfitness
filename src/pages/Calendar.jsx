@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {supabase} from '../supabase'
-import {CATS,pad,iso} from '../lib'
+import {CATS,catC,pad,iso} from '../lib'
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December']
 export default function Calendar(){
  const now=new Date(),nav=useNavigate(),[y,setY]=useState(now.getFullYear()),[m,setM]=useState(now.getMonth()),[ss,setSs]=useState([])
@@ -15,5 +15,5 @@ export default function Calendar(){
    <div className="grid grid-cols-7 gap-1">{cells.map((d,i)=>{if(!d)return <div key={i}/>
     const ds=`${y}-${pad(m+1)}-${pad(d)}`,cs=[...new Set(ss.filter(s=>s.date===ds).map(s=>s.category))],today=ds===iso(now)
     return <button key={i} onClick={()=>nav('/workout/'+ds)} className={`aspect-square rounded-xl border flex flex-col items-center justify-center hover:bg-white/5 ${today?'border-lime':'border-white/5'}`}>
-     <span>{d}</span><span className="flex gap-0.5 h-2">{cs.map(c=><i key={c} className="w-2 h-2 rounded-full" style={{background:CATS[c].c}}/>)}</span></button>})}</div>
+     <span>{d}</span><span className="flex gap-0.5 h-2">{cs.map(c=><i key={c} className="w-2 h-2 rounded-full" style={{background:catC(c)}}/>)}</span></button>})}</div>
    <div className="flex gap-4 text-xs mt-4">{Object.entries(CATS).map(([k,v])=><span key={k} className="flex items-center gap-1"><i className="w-2 h-2 rounded-full" style={{background:v.c}}/>{k}</span>)}</div></div></div>}
