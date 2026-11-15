@@ -1,11 +1,12 @@
+import {useState} from 'react'
 import {X} from 'lucide-react'
 import {MuscleFigure} from './art'
 import {P,patFor,poseSvg} from './pose'
 import {IMG,IMG_BASE} from './exerciseImages'
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):''
 export function ExerciseGuide({ex,onClose,onAdd}){
- const p=P[patFor(ex.name)],im=IMG[ex.name],lv={[ex.primary_muscle_group]:1,...Object.fromEntries((ex.secondary_muscle_groups||[]).map(m=>[m,.4]))}
- const photos=(im?.f||[]).map((f,i)=>({k:'p'+i,r:1,b:<><img src={IMG_BASE+f} width="210" height="160" loading="lazy" alt={`${ex.name}, gambar contoh ${i+1}`} className="w-full h-auto rounded-lg bg-black"/><div className="text-xs text-lime font-bold">{im.f.length>1?`Gambar contoh ${i+1}`:'Gambar contoh'}</div></>}))
+ const [bad,setBad]=useState([]),p=P[patFor(ex.name)],im=IMG[ex.name],lv={[ex.primary_muscle_group]:1,...Object.fromEntries((ex.secondary_muscle_groups||[]).map(m=>[m,.4]))}
+ const photos=(im?.f||[]).map((f,i)=>({f,i})).filter(x=>!bad.includes(x.f)).map(({f,i})=>({k:'p'+i,r:1,b:<><img src={IMG_BASE+f} width="210" height="160" loading="lazy" onError={()=>setBad(b=>[...b,f])} alt={`${ex.name}, gambar contoh ${i+1}`} className="w-full h-auto rounded-lg bg-black"/><div className="text-xs text-lime font-bold">{im.f.length>1?`Gambar contoh ${i+1}`:'Gambar contoh'}</div></>}))
  const steps=p?p.f.map((f,i)=>({k:'f'+i,r:1,b:<><div className="rounded-lg overflow-hidden bg-black/30" dangerouslySetInnerHTML={{__html:poseSvg(f,p)}}/><div className="text-xs text-lime font-bold">Langkah {i+1}</div><p className="text-xs text-zinc-300">{p.s[i]}</p></>}))
   :photos.length?[]:[{k:'g',r:1,b:<><div className="text-xs text-lime font-bold">Gerakan umum</div><p className="text-xs text-zinc-300">Belum ada ilustrasi khusus untuk exercise ini. Mulai dari beban ringan, gerakkan sendi dengan terkontrol naik dan turun, dan jaga postur tetap stabil.</p></>}]
  const cards=[...photos,...steps,
