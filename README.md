@@ -19,3 +19,6 @@ Jalankan `supabase/migration_002.sql` di SQL Editor (sekali). Halaman baru: Prog
 
 ## Update Prioritas 3 (Offline/PWA)
 Jalankan `supabase/migration_003.sql` (sekali). Deploy ke Netlify (HTTPS wajib untuk PWA). Buka aplikasi online sekali agar tersimpan, lalu bisa dipakai offline.
+
+## Update riwayat workout permanen
+Jalankan `supabase/migration_005.sql` sekali, lalu deploy. Uji manual: lihat `TESTING.md`.

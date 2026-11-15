@@ -9,6 +9,8 @@ import Calendar from './pages/Calendar'
 import Workout from './pages/Workout'
 import Progress from './pages/Progress'
 import Profile from './pages/Profile'
+import ExerciseHistory from './pages/ExerciseHistory'
+import {ToastHost} from './toast'
 import Programs from './pages/Programs'
 import Nutrition from './pages/Nutrition'
 import {SyncBadge} from './Offline'
@@ -25,7 +27,7 @@ function Layout(){
    {items.map(([to,l,I])=><NavLink key={l} to={to} className={cls}><I size={18}/>{l}</NavLink>)}</aside>
   <main className="md:ml-56 p-4 md:p-8 pb-24 md:pb-8 fade"><Outlet/></main>
   <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-white/5 flex justify-around py-2">
-   {items.map(([to,l,I])=><NavLink key={l} to={to} className={({isActive})=>`flex flex-col items-center text-[10px] gap-1 ${isActive?'text-lime':'text-zinc-500'}`}><I size={20}/>{l}</NavLink>)}</nav><RestWidget/><ProteinPill/><SyncBadge/></div></RestProvider>}
+   {items.map(([to,l,I])=><NavLink key={l} to={to} className={({isActive})=>`flex flex-col items-center text-[10px] gap-1 ${isActive?'text-lime':'text-zinc-500'}`}><I size={20}/>{l}</NavLink>)}</nav><RestWidget/><ProteinPill/><ToastHost/><SyncBadge/></div></RestProvider>}
 export default function App(){
  const [session,setSession]=useState(undefined),[recovery,setRecovery]=useState(false)
  useEffect(()=>{supabase.auth.getSession().then(({data})=>setSession(data.session))
@@ -38,5 +40,5 @@ export default function App(){
   <Route path="/login" element={session?<Navigate to="/dashboard"/>:<Auth/>}/>
   <Route element={session?<Layout/>:<Navigate to="/login"/>}>
    <Route path="/dashboard" element={<Dashboard/>}/><Route path="/calendar" element={<Calendar/>}/>
-   <Route path="/workout/:date" element={<Workout/>}/><Route path="/progress" element={<Progress/>}/><Route path="/programs" element={<Programs/>}/><Route path="/nutrition" element={<Nutrition/>}/><Route path="/profile" element={<Profile/>}/></Route>
+   <Route path="/workout/:date" element={<Workout/>}/><Route path="/progress" element={<Progress/>}/><Route path="/exercise/:id" element={<ExerciseHistory/>}/><Route path="/programs" element={<Programs/>}/><Route path="/nutrition" element={<Nutrition/>}/><Route path="/profile" element={<Profile/>}/></Route>
   <Route path="*" element={<Navigate to="/dashboard"/>}/></Routes></AuthCtx.Provider>}
